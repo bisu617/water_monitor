@@ -53,12 +53,15 @@ try:
         if time.monotonic() - start > 10:
             raise TimeoutError("MQTT connection timed out (check token/port)")
         time.sleep(0.1)
-
+    publish_start = time.perf_counter()
     info = client.publish("v1/devices/me/telemetry", json.dumps(payload), qos=1)
     info.wait_for_publish(timeout=10)
 
     if not info.is_published():
         raise TimeoutError("Publish was not acknowledged")
+    ack_latency_ms = (time.perf_counter() - publish_start) * 1000
+
+    print(f"[MQTT LATENCY] {ack_latency_ms:.2f} ms")
 
     print("MQTT delivery acknowledged!")
     print(json.dumps(payload, indent=2))

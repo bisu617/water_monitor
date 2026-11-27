@@ -1,0 +1,6 @@
+node,samples,mean_ms,median_ms,p95_ms,max_ms
+Bidur-Node-01,50,106.18,107.0,108.0,109
+Timure-Node-02,50,99.96,101.0,103.0,108
+Betrawati-Node-03,50,101.5,99.0,103.65,231
+Bhotekoshi-Node-04,50,107.92,108.0,110.0,117
+ALL FOUR NODES,200,103.89,103.0,109.0,231

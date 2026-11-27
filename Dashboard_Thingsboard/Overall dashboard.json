@@ -1,0 +1,1662 @@
+{
+  "title": "Post-Flood Water Quality | Spacious Command Dashboard",
+  "name": "Post-Flood Water Quality | Spacious Command Dashboard",
+  "image": null,
+  "mobileHide": false,
+  "mobileOrder": null,
+  "configuration": {
+    "description": "Four-node simulated early-warning monitoring network | Bidur · Betrawati · Timure · Bhotekoshi | pH, turbidity, TDS, temperature, flow, alarms and offline buffering. Simulated readings are not certification of potability.",
+    "widgets": {
+      "6da988fb-a226-ba21-775f-cdea488b62bf": {
+        "typeFullFqn": "system.map",
+        "type": "latest",
+        "sizeX": 14,
+        "sizeY": 14,
+        "config": {
+          "datasources": [],
+          "showTitle": true,
+          "backgroundColor": "#FFFFFF",
+          "color": "#12324A",
+          "padding": "9px",
+          "settings": {
+            "mapType": "geoMap",
+            "layers": [
+              {
+                "label": "{i18n:widgets.maps.layer.roadmap}",
+                "provider": "openstreet",
+                "layerType": "OpenStreetMap.Mapnik",
+                "referenceLayer": null
+              },
+              {
+                "label": "{i18n:widgets.maps.layer.satellite}",
+                "provider": "openstreet",
+                "layerType": "Esri.WorldImagery"
+              },
+              {
+                "label": "{i18n:widgets.maps.layer.hybrid}",
+                "provider": "openstreet",
+                "layerType": "Esri.WorldImagery",
+                "referenceLayer": "openstreetmap_hybrid"
+              }
+            ],
+            "imageSource": null,
+            "markers": [
+              {
+                "dsType": "device",
+                "dsLabel": "",
+                "dsDeviceId": "bf667fb0-e9a4-11f1-bf0c-b971e756f4e3",
+                "dsEntityAliasId": null,
+                "dsFilterId": null,
+                "additionalDataSources": null,
+                "additionalDataKeys": [
+                  {
+                    "name": "ph",
+                    "type": "timeseries",
+                    "label": "ph",
+                    "color": "#2196f3",
+                    "settings": {}
+                  },
+                  {
+                    "name": "tds_ppm",
+                    "type": "timeseries",
+                    "label": "tds_ppm",
+                    "color": "#2196f3",
+                    "settings": {}
+                  },
+                  {
+                    "name": "turbidity_ntu",
+                    "type": "timeseries",
+                    "label": "turbidity_ntu",
+                    "color": "#2196f3",
+                    "settings": {}
+                  },
+                  {
+                    "name": "active_alarm_severity",
+                    "type": "attribute",
+                    "label": "active_alarm_severity",
+                    "color": "#2196f3",
+                    "settings": {}
+                  }
+                ],
+                "label": {
+                  "show": true,
+                  "type": "pattern",
+                  "pattern": "${entityName}"
+                },
+                "tooltip": {
+                  "show": true,
+                  "trigger": "click",
+                  "autoclose": true,
+                  "type": "pattern",
+                  "pattern": "<b>${entityName}</b><br/>Alarm severity: ${active_alarm_severity}<br/>pH: ${ph}<br/>Turbidity: ${turbidity_ntu} NTU<br/>TDS: ${tds_ppm} ppm",
+                  "offsetX": 0,
+                  "offsetY": -1
+                },
+                "click": {
+                  "type": "doNothing"
+                },
+                "groups": null,
+                "edit": {
+                  "enabledActions": [],
+                  "attributeScope": "SERVER_SCOPE",
+                  "snappable": false
+                },
+                "xKey": {
+                  "name": "latitude",
+                  "label": "latitude",
+                  "type": "attribute",
+                  "settings": {},
+                  "color": "#2196f3"
+                },
+                "yKey": {
+                  "name": "longitude",
+                  "label": "longitude",
+                  "type": "attribute",
+                  "settings": {},
+                  "color": "#2196f3"
+                },
+                "markerType": "shape",
+                "markerShape": {
+                  "size": 34,
+                  "color": {
+                    "type": "function",
+                    "color": "#307FE5",
+                    "rangeKey": {
+                      "name": "alarm_severity_code",
+                      "type": "attribute",
+                      "label": "alarm_severity_code",
+                      "color": "#2196f3",
+                      "settings": {}
+                    },
+                    "range": [
+                      {
+                        "from": 0,
+                        "to": 0.5,
+                        "color": "rgba(3, 255, 0, 0.87)"
+                      },
+                      {
+                        "from": 0.5,
+                        "to": 1.5,
+                        "color": "#FACC15"
+                      },
+                      {
+                        "from": 1.5,
+                        "to": 2.5,
+                        "color": "#F97316"
+                      },
+                      {
+                        "from": 2.5,
+                        "to": 3.5,
+                        "color": "#EF4444"
+                      }
+                    ],
+                    "colorFunction": "\nvar severity = String(data.active_alarm_severity || \"\").toUpperCase();\n\nswitch (severity) {\n    case \"CRITICAL\":\n        return \"#FF0000\"; // Red\n\n    case \"MAJOR\":\n        return \"#FF8800\"; // Orange\n\n    case \"MINOR\":\n        return \"#FFC107\"; // Amber\n\n    case \"WARNING\":\n        return \"#FFFF00\"; // Yellow\n\n    case \"NORMAL\":\n        return \"#00CC00\"; // Green\n\n    default:\n        return \"#9E9E9E\"; // Grey: unavailable\n}\n"
+                  },
+                  "shape": "markerShape1"
+                },
+                "markerIcon": {
+                  "iconContainer": "iconContainer1",
+                  "icon": "mdi:lightbulb-on",
+                  "size": 48,
+                  "color": {
+                    "type": "constant",
+                    "color": "#307FE5"
+                  }
+                },
+                "markerImage": {
+                  "type": "image",
+                  "image": "https://static.eu.thingsboard.cloud/assets/markers/shape1.svg",
+                  "imageSize": 34
+                },
+                "markerOffsetX": 0.5,
+                "markerOffsetY": 1,
+                "markerClustering": {
+                  "enable": false,
+                  "zoomOnClick": true,
+                  "maxZoom": null,
+                  "maxClusterRadius": 80,
+                  "zoomAnimation": true,
+                  "showCoverageOnHover": true,
+                  "spiderfyOnMaxZoom": false,
+                  "chunkedLoad": false,
+                  "lazyLoad": true,
+                  "useClusterMarkerColorFunction": false,
+                  "clusterMarkerColorFunction": null
+                }
+              },
+              {
+                "dsType": "device",
+                "dsLabel": "",
+                "dsDeviceId": "bf634b60-e9a4-11f1-bf0c-b971e756f4e3",
+                "dsEntityAliasId": null,
+                "dsFilterId": null,
+                "additionalDataSources": null,
+                "additionalDataKeys": [
+                  {
+                    "name": "ph",
+                    "type": "timeseries",
+                    "label": "ph",
+                    "color": "#2196f3",
+                    "settings": {}
+                  },
+                  {
+                    "name": "turbidity_ntu",
+                    "type": "timeseries",
+                    "label": "turbidity_ntu",
+                    "color": "#2196f3",
+                    "settings": {}
+                  },
+                  {
+                    "name": "tds_ppm",
+                    "type": "timeseries",
+                    "label": "tds_ppm",
+                    "color": "#2196f3",
+                    "settings": {}
+                  },
+                  {
+                    "name": "active_alarm_severity",
+                    "type": "attribute",
+                    "label": "active_alarm_severity",
+                    "color": "#2196f3",
+                    "settings": {}
+                  }
+                ],
+                "label": {
+                  "show": true,
+                  "type": "pattern",
+                  "pattern": "${entityName}"
+                },
+                "tooltip": {
+                  "show": true,
+                  "trigger": "click",
+                  "autoclose": true,
+                  "type": "pattern",
+                  "pattern": "<b>${entityName}</b><br/>Alarm severity: ${active_alarm_severity}<br/>pH: ${ph}<br/>Turbidity: ${turbidity_ntu} NTU<br/>TDS: ${tds_ppm} ppm",
+                  "offsetX": 0,
+                  "offsetY": -1
+                },
+                "click": {
+                  "type": "doNothing"
+                },
+                "groups": null,
+                "edit": {
+                  "enabledActions": [],
+                  "attributeScope": "SERVER_SCOPE",
+                  "snappable": false
+                },
+                "xKey": {
+                  "name": "latitude",
+                  "label": "latitude",
+                  "type": "attribute",
+                  "settings": {},
+                  "color": "#2196f3"
+                },
+                "yKey": {
+                  "name": "longitude",
+                  "label": "longitude",
+                  "type": "attribute",
+                  "settings": {},
+                  "color": "#2196f3"
+                },
+                "markerType": "shape",
+                "markerShape": {
+                  "size": 34,
+                  "color": {
+                    "type": "function",
+                    "color": "#307FE5",
+                    "rangeKey": {
+                      "name": "alarm_severity_code",
+                      "type": "timeseries",
+                      "label": "alarm_severity_code",
+                      "color": "#2196f3",
+                      "settings": {}
+                    },
+                    "range": [
+                      {
+                        "from": 0,
+                        "to": 0.5,
+                        "color": "rgba(3, 255, 0, 0.87)"
+                      },
+                      {
+                        "from": 0.5,
+                        "to": 1.5,
+                        "color": "rgba(255, 255, 6, 0.87)"
+                      },
+                      {
+                        "from": 1.5,
+                        "to": 2.5,
+                        "color": "rgb(255, 149, 0)"
+                      },
+                      {
+                        "from": 2.5,
+                        "to": 3.5,
+                        "color": "rgb(255, 17, 0)"
+                      }
+                    ],
+                    "colorFunction": "\nvar severity = String(data.active_alarm_severity || \"\").toUpperCase();\n\nswitch (severity) {\n    case \"CRITICAL\":\n        return \"#FF0000\"; // Red\n\n    case \"MAJOR\":\n        return \"#FF8800\"; // Orange\n\n    case \"MINOR\":\n        return \"#FFC107\"; // Amber\n\n    case \"WARNING\":\n        return \"#FFFF00\"; // Yellow\n\n    case \"NORMAL\":\n        return \"#00CC00\"; // Green\n\n    default:\n        return \"#9E9E9E\"; // Grey: unavailable\n}\n"
+                  },
+                  "shape": "markerShape1"
+                },
+                "markerIcon": {
+                  "iconContainer": "iconContainer1",
+                  "icon": "mdi:lightbulb-on",
+                  "size": 48,
+                  "color": {
+                    "type": "constant",
+                    "color": "#307FE5"
+                  }
+                },
+                "markerImage": {
+                  "type": "image",
+                  "image": "https://static.eu.thingsboard.cloud/assets/markers/shape1.svg",
+                  "imageSize": 34
+                },
+                "markerOffsetX": 0.5,
+                "markerOffsetY": 1,
+                "markerClustering": {
+                  "enable": false,
+                  "zoomOnClick": true,
+                  "maxZoom": null,
+                  "maxClusterRadius": 80,
+                  "zoomAnimation": true,
+                  "showCoverageOnHover": true,
+                  "spiderfyOnMaxZoom": false,
+                  "chunkedLoad": false,
+                  "lazyLoad": true,
+                  "useClusterMarkerColorFunction": false,
+                  "clusterMarkerColorFunction": null
+                }
+              },
+              {
+                "dsType": "device",
+                "dsLabel": "",
+                "dsDeviceId": "bf5f05a0-e9a4-11f1-bf0c-b971e756f4e3",
+                "dsEntityAliasId": null,
+                "dsFilterId": null,
+                "additionalDataSources": null,
+                "additionalDataKeys": [
+                  {
+                    "name": "ph",
+                    "type": "timeseries",
+                    "label": "ph",
+                    "color": "#2196f3",
+                    "settings": {}
+                  },
+                  {
+                    "name": "tds_ppm",
+                    "type": "timeseries",
+                    "label": "tds_ppm",
+                    "color": "#2196f3",
+                    "settings": {}
+                  },
+                  {
+                    "name": "turbidity_ntu",
+                    "type": "timeseries",
+                    "label": "turbidity_ntu",
+                    "color": "#2196f3",
+                    "settings": {}
+                  },
+                  {
+                    "name": "active_alarm_severity",
+                    "type": "attribute",
+                    "label": "active_alarm_severity",
+                    "color": "#2196f3",
+                    "settings": {}
+                  }
+                ],
+                "label": {
+                  "show": true,
+                  "type": "pattern",
+                  "pattern": "${entityName}"
+                },
+                "tooltip": {
+                  "show": true,
+                  "trigger": "click",
+                  "autoclose": true,
+                  "type": "pattern",
+                  "pattern": "<b>${entityName}</b><br/>Alarm severity: ${active_alarm_severity}<br/>pH: ${ph}<br/>Turbidity: ${turbidity_ntu} NTU<br/>TDS: ${tds_ppm} ppm",
+                  "offsetX": 0,
+                  "offsetY": -1
+                },
+                "click": {
+                  "type": "doNothing"
+                },
+                "groups": null,
+                "edit": {
+                  "enabledActions": [],
+                  "attributeScope": "SERVER_SCOPE",
+                  "snappable": false
+                },
+                "xKey": {
+                  "name": "latitude",
+                  "label": "latitude",
+                  "type": "attribute",
+                  "settings": {},
+                  "color": "#2196f3"
+                },
+                "yKey": {
+                  "name": "longitude",
+                  "label": "longitude",
+                  "type": "attribute",
+                  "settings": {},
+                  "color": "#2196f3"
+                },
+                "markerType": "shape",
+                "markerShape": {
+                  "size": 34,
+                  "color": {
+                    "type": "function",
+                    "color": "#307FE5",
+                    "rangeKey": {
+                      "name": "alarm_severity_code",
+                      "type": "timeseries",
+                      "label": "alarm_severity_code",
+                      "color": "#2196f3",
+                      "settings": {}
+                    },
+                    "range": [
+                      {
+                        "from": 0,
+                        "to": 0.5,
+                        "color": "rgba(17, 255, 10, 0.87)"
+                      },
+                      {
+                        "from": 0.5,
+                        "to": 1.5,
+                        "color": "rgba(244, 255, 0, 0.87)"
+                      },
+                      {
+                        "from": 1.5,
+                        "to": 2.5,
+                        "color": "rgb(255, 149, 1)"
+                      },
+                      {
+                        "from": 2.5,
+                        "to": 3.5,
+                        "color": "rgba(255, 0, 0, 0.87)"
+                      }
+                    ],
+                    "colorFunction": "\nvar severity = String(data.active_alarm_severity || \"\").toUpperCase();\n\nswitch (severity) {\n    case \"CRITICAL\":\n        return \"#FF0000\"; // Red\n\n    case \"MAJOR\":\n        return \"#FF8800\"; // Orange\n\n    case \"MINOR\":\n        return \"#FFC107\"; // Amber\n\n    case \"WARNING\":\n        return \"#FFFF00\"; // Yellow\n\n    case \"NORMAL\":\n        return \"#00CC00\"; // Green\n\n    default:\n        return \"#9E9E9E\"; // Grey: unavailable\n}\n"
+                  },
+                  "shape": "markerShape1"
+                },
+                "markerIcon": {
+                  "iconContainer": "iconContainer1",
+                  "icon": "mdi:lightbulb-on",
+                  "size": 48,
+                  "color": {
+                    "type": "constant",
+                    "color": "#307FE5"
+                  }
+                },
+                "markerImage": {
+                  "type": "image",
+                  "image": "https://static.eu.thingsboard.cloud/assets/markers/shape1.svg",
+                  "imageSize": 34
+                },
+                "markerOffsetX": 0.5,
+                "markerOffsetY": 1,
+                "markerClustering": {
+                  "enable": false,
+                  "zoomOnClick": true,
+                  "maxZoom": null,
+                  "maxClusterRadius": 80,
+                  "zoomAnimation": true,
+                  "showCoverageOnHover": true,
+                  "spiderfyOnMaxZoom": false,
+                  "chunkedLoad": false,
+                  "lazyLoad": true,
+                  "useClusterMarkerColorFunction": false,
+                  "clusterMarkerColorFunction": null
+                }
+              },
+              {
+                "dsType": "device",
+                "dsLabel": "",
+                "dsDeviceId": "bf6a9e60-e9a4-11f1-bf0c-b971e756f4e3",
+                "dsEntityAliasId": null,
+                "dsFilterId": null,
+                "additionalDataSources": null,
+                "additionalDataKeys": [
+                  {
+                    "name": "ph",
+                    "type": "timeseries",
+                    "label": "ph",
+                    "color": "#2196f3",
+                    "settings": {}
+                  },
+                  {
+                    "name": "tds_ppm",
+                    "type": "timeseries",
+                    "label": "tds_ppm",
+                    "color": "#2196f3",
+                    "settings": {}
+                  },
+                  {
+                    "name": "turbidity_ntu",
+                    "type": "timeseries",
+                    "label": "turbidity_ntu",
+                    "color": "#2196f3",
+                    "settings": {}
+                  },
+                  {
+                    "name": "active_alarm_severity",
+                    "type": "attribute",
+                    "label": "active_alarm_severity",
+                    "color": "#2196f3",
+                    "settings": {}
+                  }
+                ],
+                "label": {
+                  "show": true,
+                  "type": "pattern",
+                  "pattern": "${entityName}"
+                },
+                "tooltip": {
+                  "show": true,
+                  "trigger": "click",
+                  "autoclose": true,
+                  "type": "pattern",
+                  "pattern": "<b>${entityName}</b><br/>Alarm severity: ${active_alarm_severity}<br/>pH: ${ph}<br/>Turbidity: ${turbidity_ntu} NTU<br/>TDS: ${tds_ppm} ppm",
+                  "offsetX": 0,
+                  "offsetY": -1
+                },
+                "click": {
+                  "type": "doNothing"
+                },
+                "groups": null,
+                "edit": {
+                  "enabledActions": [],
+                  "attributeScope": "SERVER_SCOPE",
+                  "snappable": false
+                },
+                "xKey": {
+                  "name": "latitude",
+                  "label": "latitude",
+                  "type": "attribute",
+                  "settings": {},
+                  "color": "#2196f3"
+                },
+                "yKey": {
+                  "name": "longitude",
+                  "label": "longitude",
+                  "type": "attribute",
+                  "settings": {},
+                  "color": "#2196f3"
+                },
+                "markerType": "shape",
+                "markerShape": {
+                  "size": 34,
+                  "color": {
+                    "type": "function",
+                    "color": "#307FE5",
+                    "rangeKey": {
+                      "name": "alarm_severity_code",
+                      "type": "timeseries",
+                      "label": "alarm_severity_code",
+                      "color": "#2196f3",
+                      "settings": {}
+                    },
+                    "range": [
+                      {
+                        "from": 0,
+                        "to": 0.5,
+                        "color": "rgba(0, 255, 102, 0.87)"
+                      },
+                      {
+                        "from": 0.5,
+                        "to": 1.5,
+                        "color": "rgba(243, 255, 0, 0.87)"
+                      },
+                      {
+                        "from": 1.5,
+                        "to": 2.5,
+                        "color": "rgb(255, 151, 6)"
+                      },
+                      {
+                        "from": 2.5,
+                        "to": 3.5,
+                        "color": "rgba(255, 15, 15, 0.87)"
+                      }
+                    ],
+                    "colorFunction": "\nvar severity = String(data.active_alarm_severity || \"\").toUpperCase();\n\nswitch (severity) {\n    case \"CRITICAL\":\n        return \"#FF0000\"; // Red\n\n    case \"MAJOR\":\n        return \"#FF8800\"; // Orange\n\n    case \"MINOR\":\n        return \"#FFC107\"; // Amber\n\n    case \"WARNING\":\n        return \"#FFFF00\"; // Yellow\n\n    case \"NORMAL\":\n        return \"#00CC00\"; // Green\n\n    default:\n        return \"#9E9E9E\"; // Grey: unavailable\n}\n"
+                  },
+                  "shape": "markerShape1"
+                },
+                "markerIcon": {
+                  "iconContainer": "iconContainer1",
+                  "icon": "mdi:lightbulb-on",
+                  "size": 48,
+                  "color": {
+                    "type": "constant",
+                    "color": "#307FE5"
+                  }
+                },
+                "markerImage": {
+                  "type": "image",
+                  "image": "https://static.eu.thingsboard.cloud/assets/markers/shape1.svg",
+                  "imageSize": 34
+                },
+                "markerOffsetX": 0.5,
+                "markerOffsetY": 1,
+                "markerClustering": {
+                  "enable": false,
+                  "zoomOnClick": true,
+                  "maxZoom": null,
+                  "maxClusterRadius": 80,
+                  "zoomAnimation": true,
+                  "showCoverageOnHover": true,
+                  "spiderfyOnMaxZoom": false,
+                  "chunkedLoad": false,
+                  "lazyLoad": true,
+                  "useClusterMarkerColorFunction": false,
+                  "clusterMarkerColorFunction": null
+                }
+              }
+            ],
+            "polygons": [],
+            "circles": [],
+            "polylines": [],
+            "additionalDataSources": [],
+            "controlsPosition": "topleft",
+            "zoomActions": [
+              "scroll",
+              "doubleClick",
+              "controlButtons"
+            ],
+            "useGestureHandling": false,
+            "scales": [],
+            "dragModeButton": false,
+            "fitMapBounds": true,
+            "useDefaultCenterPosition": false,
+            "defaultCenterPosition": "0,0",
+            "defaultZoomLevel": null,
+            "mapPageSize": 16384,
+            "mapActionButtons": [],
+            "background": {
+              "type": "color",
+              "color": "#fff",
+              "overlay": {
+                "enabled": false,
+                "color": "rgba(255,255,255,0.72)",
+                "blur": 3
+              }
+            },
+            "padding": "8px"
+          },
+          "title": "MONITORING NETWORK  |  Bidur–Trishuli Corridor",
+          "showTitleIcon": false,
+          "titleTooltip": "",
+          "dropShadow": true,
+          "enableFullscreen": true,
+          "widgetStyle": {
+            "border": "1px solid #DEE7EE"
+          },
+          "widgetCss": "",
+          "titleStyle": {
+            "fontSize": "14px",
+            "fontWeight": 600
+          },
+          "pageSize": 1024,
+          "noDataDisplayMessage": "No recent telemetry — check node connectivity",
+          "configMode": "basic",
+          "titleFont": {
+            "size": 14,
+            "sizeUnit": "px",
+            "family": "Roboto",
+            "weight": "600",
+            "style": "normal",
+            "lineHeight": "20px"
+          },
+          "titleColor": "#12324A",
+          "margin": "0px",
+          "borderRadius": "10px",
+          "iconSize": "24px",
+          "titleIcon": "map",
+          "iconColor": "#1F6BDD",
+          "actions": {},
+          "enableDataExport": false
+        },
+        "row": 17,
+        "col": 0,
+        "id": "6da988fb-a226-ba21-775f-cdea488b62bf"
+      },
+      "f07cf7ed-671d-9514-daa0-35477f00fc3c": {
+        "typeFullFqn": "system.html_container",
+        "type": "static",
+        "sizeX": 24,
+        "sizeY": 6,
+        "config": {
+          "datasources": [],
+          "showTitle": false,
+          "backgroundColor": "rgba(255,255,255,0)",
+          "color": "rgba(0, 0, 0, 0.87)",
+          "padding": "0px",
+          "settings": {
+            "type": "PLAIN",
+            "html": "\n<div class=\"water-header\">\n  <div class=\"water-header-icon\">\n    <svg viewBox=\"0 0 48 48\" fill=\"none\">\n      <path d=\"M24 5C19 13 10 22 10 30a14 14 0 0 0 28 0C38 22 29 13 24 5Z\"\n            stroke=\"currentColor\" stroke-width=\"2.5\"/>\n      <path d=\"M16 32c4 3 12 3 16 0\"\n            stroke=\"currentColor\" stroke-width=\"2.5\"\n            stroke-linecap=\"round\"/>\n    </svg>\n  </div>\n\n  <div class=\"water-header-content\">\n    <h1>Post-Flood Drinking Water Quality Monitoring</h1>\n    <p>Bidur–Trishuli Corridor <span>·</span> Nuwakot, Nepal</p>\n  </div>\n\n  <div class=\"water-header-decoration\">\n    <svg viewBox=\"0 0 310 95\" preserveAspectRatio=\"xMaxYMax meet\">\n      <path d=\"M0 95L76 35L123 70L184 12L249 71L283 43L310 95Z\"\n            fill=\"currentColor\" opacity=\".13\"/>\n      <path d=\"M76 35L91 53L102 46M184 12L204 42L219 32\"\n            fill=\"none\" stroke=\"currentColor\" opacity=\".3\"/>\n    </svg>\n  </div>\n</div>\n",
+            "css": "\n.water-header {\n  height: 100%;\n  min-height: 0;\n  box-sizing: border-box;\n  display: flex;\n  align-items: center;\n  gap: 18px;\n  padding: 14px 24px;\n  border-radius: 10px;\n  position: relative;\n  overflow: hidden;\n  color: #fff;\n  background: linear-gradient(110deg, #0d2538, #163850 65%, #0f4c5c);\n  font-family: Inter, Roboto, Arial, sans-serif;\n}\n\n.water-header-icon {\n  flex-shrink: 0;\n  width: 44px;\n  height: 44px;\n  padding: 10px;\n  background: rgba(255,255,255,.08);\n  border: 1px solid rgba(255,255,255,.14);\n  border-radius: 10px;\n  color: #a5dce7;\n  box-sizing: border-box;\n}\n\n.water-header-icon svg {\n  width: 100%;\n  height: 100%;\n}\n\n.water-header-content {\n  position: relative;\n  z-index: 2;\n  min-width: 0;\n}\n\n.water-header-content h1 {\n  margin: 0;\n  font-size: clamp(17px, 2vw, 25px);\n  font-weight: 650;\n  line-height: 1.25;\n  letter-spacing: -.5px;\n  color: white;\n}\n\n.water-header-content p {\n  margin: 8px 0 0;\n  font-size: 12px;\n  color: #cbd5e1;\n}\n\n.water-header-content p span {\n  padding: 0 7px;\n  color: #7dd3fc;\n}\n\n.water-header-decoration {\n  position: absolute;\n  right: 0;\n  bottom: 0;\n  width: 38%;\n  max-width: 310px;\n  color: white;\n  pointer-events: none;\n}\n\n.water-header-decoration svg {\n  width: 100%;\n  display: block;\n}\n\n@media (max-width: 650px) {\n  .water-header {\n    padding: 14px 16px;\n    gap: 12px;\n  }\n\n  .water-header-content h1 {\n    font-size: 16px;\n  }\n\n  .water-header-decoration {\n    opacity: .35;\n  }\n}\n",
+            "js": "",
+            "resources": []
+          },
+          "title": "Dashboard Header",
+          "dropShadow": false,
+          "enableFullscreen": false,
+          "widgetStyle": {},
+          "widgetCss": "",
+          "pageSize": 1024,
+          "noDataDisplayMessage": "",
+          "configMode": "basic",
+          "actions": {},
+          "borderRadius": "10px"
+        },
+        "row": 0,
+        "col": 0,
+        "id": "f07cf7ed-671d-9514-daa0-35477f00fc3c"
+      },
+      "2db6248c-2fea-2c1f-8eba-187376442ffd": {
+        "typeFullFqn": "system.action_button",
+        "type": "latest",
+        "sizeX": 3,
+        "sizeY": 1,
+        "config": {
+          "datasources": [
+            {
+              "type": "device",
+              "deviceId": "bf667fb0-e9a4-11f1-bf0c-b971e756f4e3",
+              "dataKeys": [],
+              "alarmFilterConfig": {
+                "statusList": [
+                  "ACTIVE"
+                ]
+              }
+            }
+          ],
+          "showTitle": false,
+          "backgroundColor": "#FFFFFF01",
+          "color": "rgba(0, 0, 0, 0.87)",
+          "padding": "0px",
+          "settings": {
+            "activatedState": {
+              "action": "DO_NOTHING",
+              "defaultValue": false,
+              "getAttribute": {
+                "key": "state",
+                "scope": null
+              },
+              "getTimeSeries": {
+                "key": "state"
+              },
+              "getAlarmStatus": {
+                "severityList": null,
+                "typeList": null
+              },
+              "dataToValue": {
+                "type": "NONE",
+                "compareToValue": true,
+                "dataToValueFunction": "/* Should return boolean value */\nreturn data;"
+              }
+            },
+            "disabledState": {
+              "action": "DO_NOTHING",
+              "defaultValue": false,
+              "getAttribute": {
+                "key": "state",
+                "scope": null
+              },
+              "getTimeSeries": {
+                "key": "state"
+              },
+              "getAlarmStatus": {
+                "severityList": null,
+                "typeList": null
+              },
+              "dataToValue": {
+                "type": "NONE",
+                "compareToValue": true,
+                "dataToValueFunction": "/* Should return boolean value */\nreturn data;"
+              }
+            },
+            "appearance": {
+              "type": "outlined",
+              "showLabel": true,
+              "label": "Bidur Station →",
+              "showIcon": true,
+              "icon": "pin_drop",
+              "iconSize": 24,
+              "iconSizeUnit": "px",
+              "mainColor": "#3B7493",
+              "backgroundColor": "#FFFFFF",
+              "autoScale": true,
+              "customStyle": {
+                "enabled": null,
+                "hovered": null,
+                "pressed": null,
+                "activated": null,
+                "disabled": null
+              }
+            }
+          },
+          "title": "Action button",
+          "showTitleIcon": false,
+          "iconColor": "rgba(0, 0, 0, 0.87)",
+          "iconSize": "24px",
+          "titleTooltip": "",
+          "dropShadow": false,
+          "enableFullscreen": false,
+          "enableDataExport": false,
+          "widgetStyle": {},
+          "titleStyle": {
+            "fontSize": "16px",
+            "fontWeight": 400
+          },
+          "showLegend": false,
+          "widgetCss": "",
+          "pageSize": 1024,
+          "noDataDisplayMessage": "",
+          "borderRadius": "4px",
+          "configMode": "basic",
+          "actions": {
+            "click": [
+              {
+                "id": "669294a8-bda8-8fea-d1a4-6b719c9babc5",
+                "name": "onClick",
+                "icon": "more_horiz",
+                "type": "openDashboard",
+                "targetDashboardStateId": "",
+                "openRightLayout": false,
+                "setEntityId": true,
+                "stateEntityParamName": null,
+                "openNewBrowserTab": false,
+                "targetDashboardId": "bc27be10-ea15-11f1-bf0c-b971e756f4e3",
+                "openInSeparateDialog": false,
+                "openInPopover": false
+              }
+            ]
+          }
+        },
+        "row": 0,
+        "col": 0,
+        "id": "2db6248c-2fea-2c1f-8eba-187376442ffd"
+      },
+      "b9c08df0-1e17-2e9b-ea88-d792674719f0": {
+        "typeFullFqn": "system.cards.html_value_card",
+        "type": "latest",
+        "sizeX": 7.5,
+        "sizeY": 3,
+        "config": {
+          "datasources": [
+            {
+              "type": "device",
+              "name": "",
+              "deviceId": "bf667fb0-e9a4-11f1-bf0c-b971e756f4e3",
+              "dataKeys": [
+                {
+                  "name": "ph",
+                  "type": "timeseries",
+                  "label": "ph",
+                  "color": "#2196f3",
+                  "settings": {}
+                },
+                {
+                  "name": "turbidity_ntu",
+                  "type": "timeseries",
+                  "label": "turbidity_ntu",
+                  "color": "#4caf50",
+                  "settings": {}
+                },
+                {
+                  "name": "tds_ppm",
+                  "type": "timeseries",
+                  "label": "tds_ppm",
+                  "color": "#f44336",
+                  "settings": {}
+                },
+                {
+                  "name": "flow_lpm",
+                  "type": "timeseries",
+                  "label": "flow_lpm",
+                  "color": "#ffc107",
+                  "settings": {}
+                },
+                {
+                  "name": "active_alarm_severity",
+                  "type": "attribute",
+                  "label": "active_alarm_severity",
+                  "color": "#607d8b",
+                  "settings": {}
+                }
+              ],
+              "alarmFilterConfig": {
+                "statusList": [
+                  "ACTIVE"
+                ]
+              }
+            }
+          ],
+          "showTitle": false,
+          "backgroundColor": "#fff",
+          "color": "rgba(0, 0, 0, 0.87)",
+          "padding": "0px",
+          "settings": {
+            "cardHtml": "\n<div class=\"station-card\">\n  <div class=\"station-header\">\n    <div>\n      <div class=\"station-id\">MONITORING STATION 01</div>\n      <h2>Bidur</h2>\n      <div class=\"station-location\">Nuwakot · Trishuli Corridor</div>\n    </div>\n    <div class=\"severity\">\n      ${active_alarm_severity}\n    </div>\n  </div>\n\n  <div class=\"station-metrics\">\n    <div class=\"metric\">\n      <span>pH</span>\n      <strong>${ph:2}</strong>\n    </div>\n    <div class=\"metric\">\n      <span>Turbidity</span>\n      <strong>${turbidity_ntu:1}</strong>\n      <small>NTU</small>\n    </div>\n    <div class=\"metric\">\n      <span>TDS</span>\n      <strong>${tds_ppm:0}</strong>\n      <small>ppm</small>\n    </div>\n    <div class=\"metric\">\n      <span>Flow</span>\n      <strong>${flow_lpm:1}</strong>\n      <small>L/min</small>\n    </div>\n  </div>\n\n  <div class=\"station-footer\">\n    <span>विदुर अनुगमन केन्द्र</span>\n    <span>View station details ↗</span>\n  </div>\n</div>\n",
+            "cardCss": "\n.station-card {\n  width: 100%;\n  height: 100%;\n  box-sizing: border-box;\n  padding: 20px;\n  background: #ffffff;\n  border: 1px solid #e2e8f0;\n  border-top: 4px solid #0f4c5c;\n  border-radius: 12px;\n  font-family: Inter, Roboto, Arial, sans-serif;\n  color: #0f172a;\n  display: flex;\n  flex-direction: column;\n  justify-content: space-between;\n  gap: 18px;\n}\n\n.station-header {\n  display: flex;\n  align-items: flex-start;\n  justify-content: space-between;\n  gap: 12px;\n}\n\n.station-id {\n  font-size: 10px;\n  font-weight: 700;\n  letter-spacing: 1.3px;\n  color: #64748b;\n}\n\n.station-header h2 {\n  margin: 5px 0 3px;\n  font-size: 23px;\n  font-weight: 700;\n}\n\n.station-location {\n  font-size: 12px;\n  color: #64748b;\n}\n\n.severity {\n  background: #e6f0f3;\n  color: #0f4c5c;\n  border-radius: 20px;\n  padding: 7px 11px;\n  font-size: 11px;\n  font-weight: 700;\n  white-space: nowrap;\n}\n\n.station-metrics {\n  display: grid;\n  grid-template-columns: repeat(4, minmax(0, 1fr));\n  gap: 10px;\n}\n\n.metric {\n  background: #f4f7fa;\n  padding: 12px 8px;\n  border-radius: 8px;\n  text-align: center;\n  min-width: 0;\n}\n\n.metric span {\n  display: block;\n  font-size: 11px;\n  color: #64748b;\n  margin-bottom: 5px;\n}\n\n.metric strong {\n  display: block;\n  font-size: 20px;\n  font-weight: 700;\n  overflow-wrap: anywhere;\n}\n\n.metric small {\n  font-size: 10px;\n  color: #64748b;\n}\n\n.station-footer {\n  border-top: 1px solid #e2e8f0;\n  padding-top: 12px;\n  display: flex;\n  justify-content: space-between;\n  gap: 8px;\n  font-size: 11px;\n  color: #64748b;\n}\n"
+          },
+          "title": "HTML Value Card",
+          "dropShadow": false,
+          "enableFullscreen": true,
+          "widgetStyle": {},
+          "titleStyle": {
+            "fontSize": "16px",
+            "fontWeight": 400
+          },
+          "showLegend": false,
+          "actions": {}
+        },
+        "row": 0,
+        "col": 0,
+        "id": "b9c08df0-1e17-2e9b-ea88-d792674719f0"
+      },
+      "bd6d7f13-f2bd-4f17-6142-013af55fbb6f": {
+        "typeFullFqn": "system.cards.html_value_card",
+        "type": "latest",
+        "sizeX": 7.5,
+        "sizeY": 3,
+        "config": {
+          "datasources": [
+            {
+              "type": "device",
+              "name": "",
+              "deviceId": "bf634b60-e9a4-11f1-bf0c-b971e756f4e3",
+              "dataKeys": [
+                {
+                  "name": "ph",
+                  "type": "timeseries",
+                  "label": "ph",
+                  "color": "#2196f3",
+                  "settings": {}
+                },
+                {
+                  "name": "turbidity_ntu",
+                  "type": "timeseries",
+                  "label": "turbidity_ntu",
+                  "color": "#4caf50",
+                  "settings": {}
+                },
+                {
+                  "name": "tds_ppm",
+                  "type": "timeseries",
+                  "label": "tds_ppm",
+                  "color": "#f44336",
+                  "settings": {}
+                },
+                {
+                  "name": "flow_lpm",
+                  "type": "timeseries",
+                  "label": "flow_lpm",
+                  "color": "#ffc107",
+                  "settings": {}
+                },
+                {
+                  "name": "active_alarm_severity",
+                  "type": "attribute",
+                  "label": "active_alarm_severity",
+                  "color": "#607d8b",
+                  "settings": {}
+                }
+              ],
+              "alarmFilterConfig": {
+                "statusList": [
+                  "ACTIVE"
+                ]
+              }
+            }
+          ],
+          "showTitle": false,
+          "backgroundColor": "#fff",
+          "color": "rgba(0, 0, 0, 0.87)",
+          "padding": "0px",
+          "settings": {
+            "cardHtml": "\n<div class=\"station-card\">\n  <div class=\"station-header\">\n    <div>\n      <div class=\"station-id\">MONITORING STATION 02</div>\n      <h2>Timure</h2>\n      <div class=\"station-location\">Timure, Rasuwa · Upper Trishuli Corridor</div>\n    </div>\n    <div class=\"severity\">\n      ${active_alarm_severity}\n    </div>\n  </div>\n\n  <div class=\"station-metrics\">\n    <div class=\"metric\">\n      <span>pH</span>\n      <strong>${ph:2}</strong>\n    </div>\n    <div class=\"metric\">\n      <span>Turbidity</span>\n      <strong>${turbidity_ntu:1}</strong>\n      <small>NTU</small>\n    </div>\n    <div class=\"metric\">\n      <span>TDS</span>\n      <strong>${tds_ppm:0}</strong>\n      <small>ppm</small>\n    </div>\n    <div class=\"metric\">\n      <span>Flow</span>\n      <strong>${flow_lpm:1}</strong>\n      <small>L/min</small>\n    </div>\n  </div>\n\n  <div class=\"station-footer\">\n    <span>टिमुरे अनुगमन केन्द्र</span>\n    <span>View station details ↗</span>\n  </div>\n</div>\n",
+            "cardCss": "\n.station-card {\n  width: 100%;\n  height: 100%;\n  box-sizing: border-box;\n  padding: 20px;\n  background: #ffffff;\n  border: 1px solid #e2e8f0;\n  border-top: 4px solid #0f4c5c;\n  border-radius: 12px;\n  font-family: Inter, Roboto, Arial, sans-serif;\n  color: #0f172a;\n  display: flex;\n  flex-direction: column;\n  justify-content: space-between;\n  gap: 18px;\n}\n\n.station-header {\n  display: flex;\n  align-items: flex-start;\n  justify-content: space-between;\n  gap: 12px;\n}\n\n.station-id {\n  font-size: 10px;\n  font-weight: 700;\n  letter-spacing: 1.3px;\n  color: #64748b;\n}\n\n.station-header h2 {\n  margin: 5px 0 3px;\n  font-size: 23px;\n  font-weight: 700;\n}\n\n.station-location {\n  font-size: 12px;\n  color: #64748b;\n}\n\n.severity {\n  background: #e6f0f3;\n  color: #0f4c5c;\n  border-radius: 20px;\n  padding: 7px 11px;\n  font-size: 11px;\n  font-weight: 700;\n  white-space: nowrap;\n}\n\n.station-metrics {\n  display: grid;\n  grid-template-columns: repeat(4, minmax(0, 1fr));\n  gap: 10px;\n}\n\n.metric {\n  background: #f4f7fa;\n  padding: 12px 8px;\n  border-radius: 8px;\n  text-align: center;\n  min-width: 0;\n}\n\n.metric span {\n  display: block;\n  font-size: 11px;\n  color: #64748b;\n  margin-bottom: 5px;\n}\n\n.metric strong {\n  display: block;\n  font-size: 20px;\n  font-weight: 700;\n  overflow-wrap: anywhere;\n}\n\n.metric small {\n  font-size: 10px;\n  color: #64748b;\n}\n\n.station-footer {\n  border-top: 1px solid #e2e8f0;\n  padding-top: 12px;\n  display: flex;\n  justify-content: space-between;\n  gap: 8px;\n  font-size: 11px;\n  color: #64748b;\n}\n"
+          },
+          "title": "HTML Value Card",
+          "dropShadow": false,
+          "enableFullscreen": true,
+          "widgetStyle": {},
+          "titleStyle": {
+            "fontSize": "16px",
+            "fontWeight": 400
+          },
+          "showLegend": false,
+          "actions": {}
+        },
+        "row": 0,
+        "col": 0,
+        "id": "bd6d7f13-f2bd-4f17-6142-013af55fbb6f"
+      },
+      "0b0b4dff-5373-092e-ef36-3ea5d08fcc77": {
+        "typeFullFqn": "system.action_button",
+        "type": "latest",
+        "sizeX": 3,
+        "sizeY": 1,
+        "config": {
+          "datasources": [
+            {
+              "type": "device",
+              "deviceId": "bf634b60-e9a4-11f1-bf0c-b971e756f4e3",
+              "dataKeys": [],
+              "alarmFilterConfig": {
+                "statusList": [
+                  "ACTIVE"
+                ]
+              }
+            }
+          ],
+          "showTitle": false,
+          "backgroundColor": "#FFFFFF01",
+          "color": "rgba(0, 0, 0, 0.87)",
+          "padding": "0px",
+          "settings": {
+            "activatedState": {
+              "action": "DO_NOTHING",
+              "defaultValue": false,
+              "getAttribute": {
+                "key": "state",
+                "scope": null
+              },
+              "getTimeSeries": {
+                "key": "state"
+              },
+              "getAlarmStatus": {
+                "severityList": null,
+                "typeList": null
+              },
+              "dataToValue": {
+                "type": "NONE",
+                "compareToValue": true,
+                "dataToValueFunction": "/* Should return boolean value */\nreturn data;"
+              }
+            },
+            "disabledState": {
+              "action": "DO_NOTHING",
+              "defaultValue": false,
+              "getAttribute": {
+                "key": "state",
+                "scope": null
+              },
+              "getTimeSeries": {
+                "key": "state"
+              },
+              "getAlarmStatus": {
+                "severityList": null,
+                "typeList": null
+              },
+              "dataToValue": {
+                "type": "NONE",
+                "compareToValue": true,
+                "dataToValueFunction": "/* Should return boolean value */\nreturn data;"
+              }
+            },
+            "appearance": {
+              "type": "outlined",
+              "showLabel": true,
+              "label": "Timure Station →",
+              "showIcon": true,
+              "icon": "pin_drop",
+              "iconSize": 24,
+              "iconSizeUnit": "px",
+              "mainColor": "#3B7493",
+              "backgroundColor": "#FFFFFF",
+              "autoScale": true,
+              "customStyle": {
+                "enabled": null,
+                "hovered": null,
+                "pressed": null,
+                "activated": null,
+                "disabled": null
+              }
+            }
+          },
+          "title": "Action button",
+          "showTitleIcon": false,
+          "iconColor": "rgba(0, 0, 0, 0.87)",
+          "iconSize": "24px",
+          "titleTooltip": "",
+          "dropShadow": false,
+          "enableFullscreen": false,
+          "enableDataExport": false,
+          "widgetStyle": {},
+          "titleStyle": {
+            "fontSize": "16px",
+            "fontWeight": 400
+          },
+          "showLegend": false,
+          "widgetCss": "",
+          "pageSize": 1024,
+          "noDataDisplayMessage": "",
+          "borderRadius": "4px",
+          "configMode": "basic",
+          "actions": {
+            "click": [
+              {
+                "id": "669294a8-bda8-8fea-d1a4-6b719c9babc5",
+                "name": "onClick",
+                "icon": "more_horiz",
+                "type": "openDashboard",
+                "targetDashboardStateId": "",
+                "openRightLayout": false,
+                "setEntityId": true,
+                "stateEntityParamName": null,
+                "openNewBrowserTab": false,
+                "targetDashboardId": "c35d7210-ea15-11f1-a149-ef0da579dd49",
+                "openInSeparateDialog": false,
+                "openInPopover": false
+              }
+            ]
+          }
+        },
+        "row": 0,
+        "col": 0,
+        "id": "0b0b4dff-5373-092e-ef36-3ea5d08fcc77"
+      },
+      "024af129-5f8a-7d03-d300-bb3cb5006e7d": {
+        "typeFullFqn": "system.cards.html_value_card",
+        "type": "latest",
+        "sizeX": 7.5,
+        "sizeY": 3,
+        "config": {
+          "datasources": [
+            {
+              "type": "device",
+              "name": "",
+              "deviceId": "bf5f05a0-e9a4-11f1-bf0c-b971e756f4e3",
+              "dataKeys": [
+                {
+                  "name": "ph",
+                  "type": "timeseries",
+                  "label": "ph",
+                  "color": "#2196f3",
+                  "settings": {}
+                },
+                {
+                  "name": "turbidity_ntu",
+                  "type": "timeseries",
+                  "label": "turbidity_ntu",
+                  "color": "#4caf50",
+                  "settings": {}
+                },
+                {
+                  "name": "tds_ppm",
+                  "type": "timeseries",
+                  "label": "tds_ppm",
+                  "color": "#f44336",
+                  "settings": {}
+                },
+                {
+                  "name": "flow_lpm",
+                  "type": "timeseries",
+                  "label": "flow_lpm",
+                  "color": "#ffc107",
+                  "settings": {}
+                },
+                {
+                  "name": "active_alarm_severity",
+                  "type": "attribute",
+                  "label": "active_alarm_severity",
+                  "color": "#607d8b",
+                  "settings": {}
+                }
+              ],
+              "alarmFilterConfig": {
+                "statusList": [
+                  "ACTIVE"
+                ]
+              }
+            }
+          ],
+          "showTitle": false,
+          "backgroundColor": "#fff",
+          "color": "rgba(0, 0, 0, 0.87)",
+          "padding": "0px",
+          "settings": {
+            "cardHtml": "\n<div class=\"station-card\">\n  <div class=\"station-header\">\n    <div>\n      <div class=\"station-id\">MONITORING STATION 03</div>\n      <h2>Betrawati</h2>\n      <div class=\"station-location\">Betrawati, Nuwakot · Trishuli Corridor</div>\n    </div>\n    <div class=\"severity\">\n      ${active_alarm_severity}\n    </div>\n  </div>\n\n  <div class=\"station-metrics\">\n    <div class=\"metric\">\n      <span>pH</span>\n      <strong>${ph:2}</strong>\n    </div>\n    <div class=\"metric\">\n      <span>Turbidity</span>\n      <strong>${turbidity_ntu:1}</strong>\n      <small>NTU</small>\n    </div>\n    <div class=\"metric\">\n      <span>TDS</span>\n      <strong>${tds_ppm:0}</strong>\n      <small>ppm</small>\n    </div>\n    <div class=\"metric\">\n      <span>Flow</span>\n      <strong>${flow_lpm:1}</strong>\n      <small>L/min</small>\n    </div>\n  </div>\n\n  <div class=\"station-footer\">\n    <span>बेत्रावती अनुगमन केन्द्र</span>\n    <span>View station details ↗</span>\n  </div>\n</div>\n",
+            "cardCss": "\n.station-card {\n  width: 100%;\n  height: 100%;\n  box-sizing: border-box;\n  padding: 20px;\n  background: #ffffff;\n  border: 1px solid #e2e8f0;\n  border-top: 4px solid #0f4c5c;\n  border-radius: 12px;\n  font-family: Inter, Roboto, Arial, sans-serif;\n  color: #0f172a;\n  display: flex;\n  flex-direction: column;\n  justify-content: space-between;\n  gap: 18px;\n}\n\n.station-header {\n  display: flex;\n  align-items: flex-start;\n  justify-content: space-between;\n  gap: 12px;\n}\n\n.station-id {\n  font-size: 10px;\n  font-weight: 700;\n  letter-spacing: 1.3px;\n  color: #64748b;\n}\n\n.station-header h2 {\n  margin: 5px 0 3px;\n  font-size: 23px;\n  font-weight: 700;\n}\n\n.station-location {\n  font-size: 12px;\n  color: #64748b;\n}\n\n.severity {\n  background: #e6f0f3;\n  color: #0f4c5c;\n  border-radius: 20px;\n  padding: 7px 11px;\n  font-size: 11px;\n  font-weight: 700;\n  white-space: nowrap;\n}\n\n.station-metrics {\n  display: grid;\n  grid-template-columns: repeat(4, minmax(0, 1fr));\n  gap: 10px;\n}\n\n.metric {\n  background: #f4f7fa;\n  padding: 12px 8px;\n  border-radius: 8px;\n  text-align: center;\n  min-width: 0;\n}\n\n.metric span {\n  display: block;\n  font-size: 11px;\n  color: #64748b;\n  margin-bottom: 5px;\n}\n\n.metric strong {\n  display: block;\n  font-size: 20px;\n  font-weight: 700;\n  overflow-wrap: anywhere;\n}\n\n.metric small {\n  font-size: 10px;\n  color: #64748b;\n}\n\n.station-footer {\n  border-top: 1px solid #e2e8f0;\n  padding-top: 12px;\n  display: flex;\n  justify-content: space-between;\n  gap: 8px;\n  font-size: 11px;\n  color: #64748b;\n}\n"
+          },
+          "title": "HTML Value Card",
+          "dropShadow": false,
+          "enableFullscreen": true,
+          "widgetStyle": {},
+          "titleStyle": {
+            "fontSize": "16px",
+            "fontWeight": 400
+          },
+          "showLegend": false,
+          "actions": {}
+        },
+        "row": 0,
+        "col": 0,
+        "id": "024af129-5f8a-7d03-d300-bb3cb5006e7d"
+      },
+      "62c7ddf5-1163-f2d4-b964-d6bdfbd3920f": {
+        "typeFullFqn": "system.cards.html_value_card",
+        "type": "latest",
+        "sizeX": 7.5,
+        "sizeY": 3,
+        "config": {
+          "datasources": [
+            {
+              "type": "device",
+              "name": "",
+              "deviceId": "bf6a9e60-e9a4-11f1-bf0c-b971e756f4e3",
+              "dataKeys": [
+                {
+                  "name": "ph",
+                  "type": "timeseries",
+                  "label": "ph",
+                  "color": "#2196f3",
+                  "settings": {}
+                },
+                {
+                  "name": "turbidity_ntu",
+                  "type": "timeseries",
+                  "label": "turbidity_ntu",
+                  "color": "#4caf50",
+                  "settings": {}
+                },
+                {
+                  "name": "tds_ppm",
+                  "type": "timeseries",
+                  "label": "tds_ppm",
+                  "color": "#f44336",
+                  "settings": {}
+                },
+                {
+                  "name": "flow_lpm",
+                  "type": "timeseries",
+                  "label": "flow_lpm",
+                  "color": "#ffc107",
+                  "settings": {}
+                },
+                {
+                  "name": "active_alarm_severity",
+                  "type": "attribute",
+                  "label": "active_alarm_severity",
+                  "color": "#607d8b",
+                  "settings": {}
+                }
+              ],
+              "alarmFilterConfig": {
+                "statusList": [
+                  "ACTIVE"
+                ]
+              }
+            }
+          ],
+          "showTitle": false,
+          "backgroundColor": "#fff",
+          "color": "rgba(0, 0, 0, 0.87)",
+          "padding": "0px",
+          "settings": {
+            "cardHtml": "\n<div class=\"station-card\">\n  <div class=\"station-header\">\n    <div>\n      <div class=\"station-id\">MONITORING STATION 04</div>\n      <h2>Bhotekoshi</h2>\n      <div class=\"station-location\">Bhotekoshi · Upper Trishuli Corridor, Rasuwa</div>\n    </div>\n    <div class=\"severity\">\n      ${active_alarm_severity}\n    </div>\n  </div>\n\n  <div class=\"station-metrics\">\n    <div class=\"metric\">\n      <span>pH</span>\n      <strong>${ph:2}</strong>\n    </div>\n    <div class=\"metric\">\n      <span>Turbidity</span>\n      <strong>${turbidity_ntu:1}</strong>\n      <small>NTU</small>\n    </div>\n    <div class=\"metric\">\n      <span>TDS</span>\n      <strong>${tds_ppm:0}</strong>\n      <small>ppm</small>\n    </div>\n    <div class=\"metric\">\n      <span>Flow</span>\n      <strong>${flow_lpm:1}</strong>\n      <small>L/min</small>\n    </div>\n  </div>\n\n  <div class=\"station-footer\">\n    <span>भोटेकोशी अनुगमन केन्द्र</span>\n    <span>View station details ↗</span>\n  </div>\n</div>\n",
+            "cardCss": "\n.station-card {\n  width: 100%;\n  height: 100%;\n  box-sizing: border-box;\n  padding: 20px;\n  background: #ffffff;\n  border: 1px solid #e2e8f0;\n  border-top: 4px solid #0f4c5c;\n  border-radius: 12px;\n  font-family: Inter, Roboto, Arial, sans-serif;\n  color: #0f172a;\n  display: flex;\n  flex-direction: column;\n  justify-content: space-between;\n  gap: 18px;\n}\n\n.station-header {\n  display: flex;\n  align-items: flex-start;\n  justify-content: space-between;\n  gap: 12px;\n}\n\n.station-id {\n  font-size: 10px;\n  font-weight: 700;\n  letter-spacing: 1.3px;\n  color: #64748b;\n}\n\n.station-header h2 {\n  margin: 5px 0 3px;\n  font-size: 23px;\n  font-weight: 700;\n}\n\n.station-location {\n  font-size: 12px;\n  color: #64748b;\n}\n\n.severity {\n  background: #e6f0f3;\n  color: #0f4c5c;\n  border-radius: 20px;\n  padding: 7px 11px;\n  font-size: 11px;\n  font-weight: 700;\n  white-space: nowrap;\n}\n\n.station-metrics {\n  display: grid;\n  grid-template-columns: repeat(4, minmax(0, 1fr));\n  gap: 10px;\n}\n\n.metric {\n  background: #f4f7fa;\n  padding: 12px 8px;\n  border-radius: 8px;\n  text-align: center;\n  min-width: 0;\n}\n\n.metric span {\n  display: block;\n  font-size: 11px;\n  color: #64748b;\n  margin-bottom: 5px;\n}\n\n.metric strong {\n  display: block;\n  font-size: 20px;\n  font-weight: 700;\n  overflow-wrap: anywhere;\n}\n\n.metric small {\n  font-size: 10px;\n  color: #64748b;\n}\n\n.station-footer {\n  border-top: 1px solid #e2e8f0;\n  padding-top: 12px;\n  display: flex;\n  justify-content: space-between;\n  gap: 8px;\n  font-size: 11px;\n  color: #64748b;\n}\n"
+          },
+          "title": "HTML Value Card",
+          "dropShadow": false,
+          "enableFullscreen": true,
+          "widgetStyle": {},
+          "titleStyle": {
+            "fontSize": "16px",
+            "fontWeight": 400
+          },
+          "showLegend": false,
+          "actions": {}
+        },
+        "row": 0,
+        "col": 0,
+        "id": "62c7ddf5-1163-f2d4-b964-d6bdfbd3920f"
+      },
+      "d2653c6e-c95f-e98e-4888-bcf450a8f17f": {
+        "typeFullFqn": "system.action_button",
+        "type": "latest",
+        "sizeX": 3,
+        "sizeY": 1,
+        "config": {
+          "datasources": [
+            {
+              "type": "device",
+              "deviceId": "bf667fb0-e9a4-11f1-bf0c-b971e756f4e3",
+              "dataKeys": [],
+              "alarmFilterConfig": {
+                "statusList": [
+                  "ACTIVE"
+                ]
+              }
+            }
+          ],
+          "showTitle": false,
+          "backgroundColor": "#FFFFFF01",
+          "color": "rgba(0, 0, 0, 0.87)",
+          "padding": "0px",
+          "settings": {
+            "activatedState": {
+              "action": "DO_NOTHING",
+              "defaultValue": false,
+              "getAttribute": {
+                "key": "state",
+                "scope": null
+              },
+              "getTimeSeries": {
+                "key": "state"
+              },
+              "getAlarmStatus": {
+                "severityList": null,
+                "typeList": null
+              },
+              "dataToValue": {
+                "type": "NONE",
+                "compareToValue": true,
+                "dataToValueFunction": "/* Should return boolean value */\nreturn data;"
+              }
+            },
+            "disabledState": {
+              "action": "DO_NOTHING",
+              "defaultValue": false,
+              "getAttribute": {
+                "key": "state",
+                "scope": null
+              },
+              "getTimeSeries": {
+                "key": "state"
+              },
+              "getAlarmStatus": {
+                "severityList": null,
+                "typeList": null
+              },
+              "dataToValue": {
+                "type": "NONE",
+                "compareToValue": true,
+                "dataToValueFunction": "/* Should return boolean value */\nreturn data;"
+              }
+            },
+            "appearance": {
+              "type": "outlined",
+              "showLabel": true,
+              "label": "Betrawati Station →",
+              "showIcon": true,
+              "icon": "pin_drop",
+              "iconSize": 24,
+              "iconSizeUnit": "px",
+              "mainColor": "#3B7493",
+              "backgroundColor": "#FFFFFF",
+              "autoScale": true,
+              "customStyle": {
+                "enabled": null,
+                "hovered": null,
+                "pressed": null,
+                "activated": null,
+                "disabled": null
+              }
+            }
+          },
+          "title": "Action button",
+          "showTitleIcon": false,
+          "iconColor": "rgba(0, 0, 0, 0.87)",
+          "iconSize": "24px",
+          "titleTooltip": "",
+          "dropShadow": false,
+          "enableFullscreen": false,
+          "enableDataExport": false,
+          "widgetStyle": {},
+          "titleStyle": {
+            "fontSize": "16px",
+            "fontWeight": 400
+          },
+          "showLegend": false,
+          "widgetCss": "",
+          "pageSize": 1024,
+          "noDataDisplayMessage": "",
+          "borderRadius": "4px",
+          "configMode": "basic",
+          "actions": {
+            "click": [
+              {
+                "id": "669294a8-bda8-8fea-d1a4-6b719c9babc5",
+                "name": "onClick",
+                "icon": "more_horiz",
+                "type": "openDashboard",
+                "targetDashboardStateId": "",
+                "openRightLayout": false,
+                "setEntityId": true,
+                "stateEntityParamName": null,
+                "openNewBrowserTab": false,
+                "targetDashboardId": "c8b56560-ea15-11f1-bad3-1d251350e257",
+                "openInSeparateDialog": false,
+                "openInPopover": false
+              }
+            ]
+          }
+        },
+        "row": 0,
+        "col": 0,
+        "id": "d2653c6e-c95f-e98e-4888-bcf450a8f17f"
+      },
+      "00ceab9e-618c-ba72-4d3c-748e04be0712": {
+        "typeFullFqn": "system.action_button",
+        "type": "latest",
+        "sizeX": 3,
+        "sizeY": 1,
+        "config": {
+          "datasources": [
+            {
+              "type": "device",
+              "deviceId": "bf634b60-e9a4-11f1-bf0c-b971e756f4e3",
+              "dataKeys": [],
+              "alarmFilterConfig": {
+                "statusList": [
+                  "ACTIVE"
+                ]
+              }
+            }
+          ],
+          "showTitle": false,
+          "backgroundColor": "#FFFFFF01",
+          "color": "rgba(0, 0, 0, 0.87)",
+          "padding": "0px",
+          "settings": {
+            "activatedState": {
+              "action": "DO_NOTHING",
+              "defaultValue": false,
+              "getAttribute": {
+                "key": "state",
+                "scope": null
+              },
+              "getTimeSeries": {
+                "key": "state"
+              },
+              "getAlarmStatus": {
+                "severityList": null,
+                "typeList": null
+              },
+              "dataToValue": {
+                "type": "NONE",
+                "compareToValue": true,
+                "dataToValueFunction": "/* Should return boolean value */\nreturn data;"
+              }
+            },
+            "disabledState": {
+              "action": "DO_NOTHING",
+              "defaultValue": false,
+              "getAttribute": {
+                "key": "state",
+                "scope": null
+              },
+              "getTimeSeries": {
+                "key": "state"
+              },
+              "getAlarmStatus": {
+                "severityList": null,
+                "typeList": null
+              },
+              "dataToValue": {
+                "type": "NONE",
+                "compareToValue": true,
+                "dataToValueFunction": "/* Should return boolean value */\nreturn data;"
+              }
+            },
+            "appearance": {
+              "type": "outlined",
+              "showLabel": true,
+              "label": "Bhotekoshi Station →",
+              "showIcon": true,
+              "icon": "pin_drop",
+              "iconSize": 24,
+              "iconSizeUnit": "px",
+              "mainColor": "#3B7493",
+              "backgroundColor": "#FFFFFF",
+              "autoScale": true,
+              "customStyle": {
+                "enabled": null,
+                "hovered": null,
+                "pressed": null,
+                "activated": null,
+                "disabled": null
+              }
+            }
+          },
+          "title": "Action button",
+          "showTitleIcon": false,
+          "iconColor": "rgba(0, 0, 0, 0.87)",
+          "iconSize": "24px",
+          "titleTooltip": "",
+          "dropShadow": false,
+          "enableFullscreen": false,
+          "enableDataExport": false,
+          "widgetStyle": {},
+          "titleStyle": {
+            "fontSize": "16px",
+            "fontWeight": 400
+          },
+          "showLegend": false,
+          "widgetCss": "",
+          "pageSize": 1024,
+          "noDataDisplayMessage": "",
+          "borderRadius": "4px",
+          "configMode": "basic",
+          "actions": {
+            "click": [
+              {
+                "id": "669294a8-bda8-8fea-d1a4-6b719c9babc5",
+                "name": "onClick",
+                "icon": "more_horiz",
+                "type": "openDashboard",
+                "targetDashboardStateId": "",
+                "openRightLayout": false,
+                "setEntityId": true,
+                "stateEntityParamName": null,
+                "openNewBrowserTab": false,
+                "targetDashboardId": "cf1c57b0-ea15-11f1-bf0c-b971e756f4e3",
+                "openInSeparateDialog": false,
+                "openInPopover": false
+              }
+            ]
+          }
+        },
+        "row": 0,
+        "col": 0,
+        "id": "00ceab9e-618c-ba72-4d3c-748e04be0712"
+      }
+    },
+    "states": {
+      "default": {
+        "name": "Post-Flood Drinking Water Quality Monitoring | Bidur–Trishuli",
+        "root": true,
+        "layouts": {
+          "main": {
+            "widgets": {
+              "6da988fb-a226-ba21-775f-cdea488b62bf": {
+                "sizeX": 24,
+                "sizeY": 4,
+                "row": 2,
+                "col": 0
+              },
+              "f07cf7ed-671d-9514-daa0-35477f00fc3c": {
+                "sizeX": 24,
+                "sizeY": 2,
+                "row": 0,
+                "col": 0
+              },
+              "2db6248c-2fea-2c1f-8eba-187376442ffd": {
+                "sizeX": 3,
+                "sizeY": 1,
+                "row": 11,
+                "col": 0
+              },
+              "b9c08df0-1e17-2e9b-ea88-d792674719f0": {
+                "sizeX": 11,
+                "sizeY": 5,
+                "row": 6,
+                "col": 0
+              },
+              "bd6d7f13-f2bd-4f17-6142-013af55fbb6f": {
+                "sizeX": 11,
+                "sizeY": 5,
+                "row": 6,
+                "col": 13
+              },
+              "0b0b4dff-5373-092e-ef36-3ea5d08fcc77": {
+                "sizeX": 3,
+                "sizeY": 1,
+                "row": 11,
+                "col": 21
+              },
+              "024af129-5f8a-7d03-d300-bb3cb5006e7d": {
+                "sizeX": 11,
+                "sizeY": 5,
+                "row": 12,
+                "col": 0
+              },
+              "62c7ddf5-1163-f2d4-b964-d6bdfbd3920f": {
+                "sizeX": 11,
+                "sizeY": 5,
+                "row": 12,
+                "col": 13
+              },
+              "d2653c6e-c95f-e98e-4888-bcf450a8f17f": {
+                "sizeX": 3,
+                "sizeY": 1,
+                "row": 17,
+                "col": 0
+              },
+              "00ceab9e-618c-ba72-4d3c-748e04be0712": {
+                "sizeX": 3,
+                "sizeY": 1,
+                "row": 17,
+                "col": 21
+              }
+            },
+            "gridSettings": {
+              "layoutType": "default",
+              "backgroundColor": "#F3F6F8",
+              "columns": 24,
+              "margin": 9,
+              "outerMargin": true,
+              "backgroundSizeMode": "auto",
+              "minColumns": 24,
+              "viewFormat": "grid",
+              "autoFillHeight": true,
+              "rowHeight": 60,
+              "mobileAutoFillHeight": true,
+              "mobileRowHeight": 65
+            }
+          }
+        }
+      }
+    },
+    "entityAliases": {
+      "5a3d936e-f332-3a43-f16c-9f1280cfe706": {
+        "id": "5a3d936e-f332-3a43-f16c-9f1280cfe706",
+        "alias": "Water Monitoring Nodes",
+        "filter": {
+          "type": "entityList",
+          "resolveMultiple": true,
+          "entityType": "DEVICE",
+          "entityList": [
+            "bf667fb0-e9a4-11f1-bf0c-b971e756f4e3",
+            "bf634b60-e9a4-11f1-bf0c-b971e756f4e3",
+            "bf5f05a0-e9a4-11f1-bf0c-b971e756f4e3",
+            "bf6a9e60-e9a4-11f1-bf0c-b971e756f4e3"
+          ]
+        }
+      }
+    },
+    "filters": {},
+    "timewindow": {
+      "selectedTab": 0,
+      "realtime": {
+        "realtimeType": 0,
+        "timewindowMs": 3600000
+      },
+      "aggregation": {
+        "type": "NONE",
+        "limit": 50000
+      }
+    },
+    "settings": {
+      "stateControllerId": "entity",
+      "showTitle": false,
+      "showDashboardsSelect": true,
+      "showEntitiesSelect": true,
+      "showDashboardTimewindow": true,
+      "showDashboardExport": true,
+      "toolbarAlwaysOpen": true,
+      "titleColor": "#12324A",
+      "showDashboardLogo": false,
+      "hideToolbar": false,
+      "showFilters": true,
+      "showUpdateDashboardImage": true,
+      "showConfigureWithAi": true
+    }
+  },
+  "resources": []
+}

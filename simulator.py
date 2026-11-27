@@ -27,7 +27,7 @@ def contamination_event(elapsed_minutes):
 # Simulate a complete water supply interruption
 def supply_interruption(elapsed_minutes):
     interruption_start = 10
-    interruption_end = 20
+    interruption_end = 40
 
     return interruption_start <= elapsed_minutes < interruption_end
 

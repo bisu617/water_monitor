@@ -1,0 +1,11 @@
+event,node,alarm_id,alarm_type,sent_ms,alarm_created_ms,activation_delay_ms,alarm_cleared
+1,Bidur-Node-01,de99ac15-54a4-4d62-b65e-d8e3b9d86182,Critical Turbidity,1795706866681,1795706868677,1996,True
+2,Timure-Node-02,a90669e9-dbbe-4284-a6b0-c3f83cd1575e,Critical Turbidity,1795706868055,1795706870047,1992,True
+3,Betrawati-Node-03,7a45544a-f271-4498-ada2-069f65613f12,Critical Turbidity,1795706869444,1795706871437,1993,True
+4,Bhotekoshi-Node-04,7bc47141-02f2-45a7-b5a2-1c3c522090a0,Critical Turbidity,1795706870812,1795706872805,1993,True
+5,Bidur-Node-01,d0f83b41-839d-4ff9-a326-91050f245bc9,Critical Turbidity,1795706872191,1795706874182,1991,True
+6,Timure-Node-02,00a65d45-b56f-48e8-89d2-8dfc3bbe5cf0,Critical Turbidity,1795706873559,1795706875549,1990,True
+7,Betrawati-Node-03,2adcfb9e-4286-4edb-ab51-51800ef39660,Critical Turbidity,1795706874942,1795706876931,1989,True
+8,Bhotekoshi-Node-04,4ec9a670-36bc-4b34-afeb-234707ff5b75,Critical Turbidity,1795706876305,1795706878296,1991,True
+9,Bidur-Node-01,b851f543-91d2-45da-ad8b-1a357477f0f0,Critical Turbidity,1795706877697,1795706879689,1992,True
+10,Timure-Node-02,ce3e2c13-a670-4716-a5bf-a35a684d39f5,Critical Turbidity,1795706879072,1795706881061,1989,True
