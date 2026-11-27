@@ -1,429 +1,333 @@
 # IoT Water Monitoring (ThingsBoard + MQTT + SQLite)
 
-A multi-node IoT water quality monitoring simulation that:
-- generates sensor telemetry for 4 virtual nodes,
-- publishes to ThingsBoard over secure MQTT (TLS, QoS 1),
-- buffers data locally in SQLite when offline,
-- and replays pending telemetry automatically when connectivity is restored.
+Four-node simulated water-quality monitoring system with:
+- secure MQTT telemetry to ThingsBoard,
+- local SQLite buffering during outages,
+- automatic replay and delivery verification,
+- alarm latency and ingestion latency benchmarking,
+- map severity synchronization and dashboard JSON exports.
 
-This project is designed for practical demos of **edge buffering + cloud sync + alarm testing** for water monitoring pipelines.
-
----
-
-## 1) Features
-
-- 4 virtual monitoring nodes with independent offsets and coordinates.
-- Simulated sensors:
-  - pH
-  - Turbidity (NTU)
-  - TDS (ppm)
-  - Water temperature (°C)
-  - Flow (L/min)
-- Rainfall-driven contamination model with recovery curve.
-- Simulated supply interruption window (flow drops to zero).
-- Local durable storage with SQLite (`water_monitoring.db`).
-- Per-node pending queue and replay logic.
-- MQTT over TLS on port `8883`.
-- QoS tests and alarm scenario injectors.
-- Connectivity/outage simulation via `outage.flag`.
+This repository is for simulation, integration testing, and performance measurement workflows.
 
 ---
 
-## 2) Project Structure
+## 1) What is included
 
-```text
-IoT-Water-Monitoring/
-├─ alarm_scenarios.py
-├─ connectall.py
-├─ database.py
-├─ mqtt_client.py
-├─ multi_node.py
-├─ retry_pending.py
-├─ simulator.py
-├─ test_alarm.py
-├─ test_dynamic_nodes.py
-├─ test_flow_alarm.py
-├─ test_four_nodes.py
-├─ test_ph_alarm.py
-├─ test_qos.py
-├─ test_tds_alarm.py
-├─ test_turbidity_alarm.py
-└─ README.md
+### Core runtime
+- `multi_node.py` – main four-node simulator + local buffering + replay.
+- `database.py` – SQLite schema and sync helpers.
+- `simulator.py` – contamination and supply interruption signal model.
+- `mqtt_client.py` – single publish sanity check with MQTT ack latency output.
+- `retry_pending.py` – force replay of locally pending rows.
+
+### Alarm and quality scenario testing
+- `alarm_scenarios.py` – sends predefined test telemetry states.
+- `test_flow_alarm.py` – sustained zero-flow alarm test.
+- `test_qos.py` – QoS 0 vs QoS 1 publish behavior.
+- `warning_marker_demo.py` – interactive warning-severity map demo.
+- `test_buffer_capacity.py` – local policy test for max SQLite pending buffer.
+
+### Performance and verification
+- `latency_test.py` – per-node ingestion latency benchmark (created timestamp vs server timestamp).
+- `alarm_latency_test.py` – critical turbidity alarm activation latency benchmark.
+- `delivery_verification.py` – SQLite vs cloud telemetry delivery audit.
+- `map_alarm_severity.py` – polls active alarms and writes `active_alarm_severity` attribute for map coloring.
+
+### Dashboards and data artifacts
+- `Dashboard_Thingsboard/Overall dashboard.json` – multi-node command dashboard export.
+- `Dashboard_Thingsboard/post-flood_water_quality___*.json` – station dashboard exports.
+- `results/*.csv` – sample benchmark and verification outputs.
+
+### Other
+- `requirements.txt` – Python dependencies.
+- `dashboards` – currently empty placeholder file.
+
+---
+
+## 2) Architecture summary
+
+1. Sensor values are generated per node and saved first to SQLite.
+2. Publisher flushes unsynced rows in small batches to ThingsBoard via MQTT TLS (`qos=1`).
+3. On success, rows are marked `synced=1`; otherwise retained for retry.
+4. If `outage.flag` exists, publishing pauses while local buffering continues.
+5. On recovery, backlog is replayed and recovery throughput is printed.
+
+---
+
+## 3) Prerequisites
+
+- Windows, Linux, or macOS
+- Python 3.10+ (3.11/3.12 recommended)
+- ThingsBoard Cloud/Server instance
+- 4 ThingsBoard device tokens (one per node)
+- ThingsBoard API Key (required by REST-based scripts)
+- Network access to:
+  - MQTT TLS port `8883`
+  - HTTPS REST API of your ThingsBoard host
+
+---
+
+## 4) Installation
+
+### 4.1 Clone and enter project
+
+```powershell
+git clone https://github.com/bisu617/water_monitor.git
+cd water_monitor
 ```
 
----
-
-## 3) Requirements
-
-- Python 3.10+ (3.11/3.12 recommended)
-- ThingsBoard instance reachable from your machine
-- 4 device access tokens in ThingsBoard (one per node)
-- Internet/network access to MQTT TLS port `8883`
-
-Python packages used:
-- `paho-mqtt`
-- `python-dotenv`
-
----
-
-## 4) Setup
-
-### 4.1 Create and activate virtual environment (PowerShell)
+### 4.2 Create virtual environment
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 ```
 
-### 4.2 Install dependencies
+### 4.3 Install dependencies
 
 ```powershell
-pip install paho-mqtt python-dotenv
+pip install -r requirements.txt
 ```
 
-### 4.3 Create `.env`
+Dependencies in this repo:
+- `paho-mqtt`
+- `python-dotenv`
+- `requests`
 
-Create a `.env` file in the project root with:
+---
+
+## 5) Environment configuration
+
+Create a `.env` file in the repo root:
 
 ```env
-THINGSBOARD_HOST=your.thingsboard.host
-THINGSBOARD_TOKEN_1=token_for_node_1
-THINGSBOARD_TOKEN_2=token_for_node_2
-THINGSBOARD_TOKEN_3=token_for_node_3
-THINGSBOARD_TOKEN_4=token_for_node_4
+THINGSBOARD_HOST=eu.thingsboard.cloud
+THINGSBOARD_TOKEN_1=token_for_bidur
+THINGSBOARD_TOKEN_2=token_for_timure
+THINGSBOARD_TOKEN_3=token_for_betrawati
+THINGSBOARD_TOKEN_4=token_for_bhotekoshi
+THINGSBOARD_API_KEY=your_thingsboard_api_key
 ```
 
 Notes:
-- `THINGSBOARD_HOST` should be hostname only (no protocol prefix).
-- Tokens must be unique across the four nodes.
+- `THINGSBOARD_HOST` should be hostname only (no `https://`).
+- Some scripts prepend `mqtt.` automatically when needed.
+- `THINGSBOARD_API_KEY` is mandatory for:
+  - `latency_test.py`
+  - `alarm_latency_test.py`
+  - `delivery_verification.py`
+  - `map_alarm_severity.py`
 
 ---
 
-## 5) Data Model (SQLite)
+## 6) Database behavior
 
-Database file: `water_monitoring.db`
+SQLite file: `water_monitoring.db`
 
 Table: `readings`
+- `id`, `device_id`, `timestamp_ms`
+- `ph`, `turbidity_ntu`, `tds_ppm`, `water_temp_c`, `flow_lpm`
+- `latitude`, `longitude`
+- `synced` (`0` pending, `1` uploaded)
 
-Columns:
-- `id` (INTEGER PRIMARY KEY AUTOINCREMENT)
-- `device_id` (TEXT)
-- `timestamp_ms` (INTEGER)
-- `ph` (REAL)
-- `turbidity_ntu` (REAL)
-- `tds_ppm` (REAL)
-- `water_temp_c` (REAL)
-- `flow_lpm` (REAL)
-- `latitude` (REAL)
-- `longitude` (REAL)
-- `synced` (INTEGER, default `0`)
-
-Behavior:
-- Every generated reading is written to SQLite first.
-- `synced=0` means pending cloud upload.
-- After successful MQTT publish (PUBACK), records are marked `synced=1`.
+Key points:
+- Data is always stored locally first.
+- Upload confirmation depends on MQTT PUBACK (`qos=1`).
+- Failed publishes leave data pending for later replay.
 
 ---
 
-## 6) Main Runtime: `multi_node.py`
+## 7) Main runtime usage
 
-Run:
+Run the four-node system:
 
 ```powershell
 python multi_node.py
 ```
 
-What it does:
-1. Validates host and all 4 tokens.
-2. Ensures token uniqueness.
-3. Initializes SQLite database.
-4. Creates one MQTT client per node.
-5. Generates periodic sensor readings (every ~2 seconds by default).
-6. Writes readings to SQLite.
-7. Tries to flush pending records to ThingsBoard in batches.
-8. Updates/Publishes `buffer_depth` telemetry.
-
-### Simulation settings inside `multi_node.py`
-
-- `SAMPLE_INTERVAL = 2` (seconds)
-- `SIMULATION_SPEED = 60`
+Current runtime settings inside `multi_node.py`:
+- `SAMPLE_INTERVAL = 2`
+- `SIMULATION_SPEED = 0`
 - `BATCH_SIZE = 5`
 - `MAX_PENDING_PER_NODE = 12000`
 
-### Node definitions
+Important:
+- With `SIMULATION_SPEED = 0`, simulated elapsed contamination time does not progress in main loop; use scenario scripts for alarm transitions or adjust this value if you want dynamic contamination progression.
 
-Each node has:
-- token
-- latitude
-- longitude
-- contamination time offset
+### Outage simulation
 
-Configured nodes:
-- `Bidur-Node-01`
-- `Timure-Node-02`
-- `Betrawati-Node-03`
-- `Bhotekoshi-Node-04`
-
-### Outage simulation switch
-
-`multi_node.py` checks for `outage.flag` in the project root:
-- If file exists: publishing is paused (SQLite buffering continues).
-- If file is removed: buffered data replay resumes.
-
-Create outage:
+Create outage flag (publishing paused):
 
 ```powershell
 New-Item outage.flag -ItemType File
 ```
 
-Recover:
+Clear outage flag (replay resumes):
 
 ```powershell
 Remove-Item outage.flag
 ```
 
----
-
-## 7) Supporting Scripts
-
-### 7.1 `database.py`
-
-Core DB helpers:
-- `initialize_database()`
-- `save_reading(...)`
-- `get_pending_readings(limit=10)`
-- `mark_as_synced(record_ids)`
-- `get_buffer_depth(device_id)`
-
-Run directly to initialize DB:
-
-```powershell
-python database.py
-```
+When backlog clears, runtime prints recovery timing and clearance rate.
 
 ---
 
-### 7.2 `simulator.py`
+## 8) Script-by-script runbook
 
-Provides simulation logic:
-- `contamination_event(elapsed_minutes)`
-- `supply_interruption(elapsed_minutes)`
-- `generate_reading(...)`
-
-Can run standalone:
-
-```powershell
-python simulator.py
-```
-
----
-
-### 7.3 `retry_pending.py`
-
-Reconnects all configured nodes and attempts to flush remaining pending records until no progress can be made.
-
-Run:
-
-```powershell
-python retry_pending.py
-```
-
-Use case:
-- You previously had outages/disconnects and want a focused replay pass.
-
----
-
-### 7.4 `connectall.py`
-
-Quick connectivity/auth test for all four configured devices.
-
-Run:
-
-```powershell
-python connectall.py
-```
-
----
-
-### 7.5 `mqtt_client.py`
-
-Single-node MQTT publish sanity check with timestamped payload.
-
-Run:
+### MQTT connectivity and sanity
 
 ```powershell
 python mqtt_client.py
 ```
+- Sends one telemetry payload.
+- Prints MQTT ack latency in ms.
 
----
+```powershell
+python retry_pending.py
+```
+- Reconnects nodes and flushes pending SQLite rows.
 
-## 8) Alarm and Scenario Testing
-
-### 8.1 `alarm_scenarios.py`
-
-Inject predefined scenario payloads.
-
-Available scenarios:
-- `normal`
-- `turbidity_warning`
-- `turbidity_critical`
-- `turbidity_warning_clear`
-- `turbidity_critical_clear`
-- `ph_low`
-- `ph_high`
-- `ph_clear`
-- `tds_high`
-- `tds_clear`
-- `flow_zero`
-- `flow_clear`
-
-Run example:
+### Scenario and alarm tests
 
 ```powershell
 python alarm_scenarios.py turbidity_critical
+python alarm_scenarios.py flow_zero
+python alarm_scenarios.py flow_clear
 ```
-
----
-
-### 8.2 `test_flow_alarm.py`
-
-Repeatedly sends `flow_zero` for a duration, then restores.
 
 ```powershell
 python test_flow_alarm.py --duration 30 --interval 5
 ```
 
----
-
-### 8.3 `test_qos.py`
-
-Compares publish behavior/timing for QoS 0 and QoS 1.
-
 ```powershell
 python test_qos.py
 ```
 
----
-
-### 8.4 One-off alarm tests
-
-- `test_alarm.py` – sample alarm payload test
-- `test_ph_alarm.py` – pH reading test
-- `test_tds_alarm.py` – TDS reading test
-- `test_turbidity_alarm.py` – turbidity reading test
-- `test_four_nodes.py` – sends one sample reading from each location/node
-- `test_dynamic_nodes.py` – prints simulated location-wise readings
-
-Examples:
-
 ```powershell
-python test_alarm.py
-python test_ph_alarm.py
-python test_tds_alarm.py
-python test_turbidity_alarm.py
-python test_four_nodes.py
-python test_dynamic_nodes.py
+python warning_marker_demo.py
 ```
-
----
-
-## 9) Typical Demo Flow
-
-1. Configure `.env` with valid host and 4 tokens.
-2. Run:
-
-   ```powershell
-   python multi_node.py
-   ```
-
-3. Observe telemetry arriving in ThingsBoard.
-4. Simulate outage by creating `outage.flag`.
-5. Let pending data accumulate in SQLite.
-6. Remove `outage.flag` and watch replay/flush.
-7. Validate alarm paths with:
-
-   ```powershell
-   python alarm_scenarios.py turbidity_critical
-   python test_flow_alarm.py --duration 30 --interval 5
-   ```
-
----
-
-## 10) Troubleshooting
-
-### Missing env vars
-- Error: missing host/token(s)
-- Fix: verify `.env` keys and values.
-
-### TLS or connection timeout
-- Check host DNS.
-- Verify firewall allows outbound `8883`.
-- Confirm ThingsBoard MQTT endpoint and certificates.
-
-### Auth/connect rejected
-- Verify token belongs to intended ThingsBoard device.
-- Ensure each node token is unique.
-
-### No telemetry in dashboard
-- Confirm correct device is selected in ThingsBoard.
-- Check script logs for publish ack / retry messages.
-- Verify `outage.flag` is not present.
-
-### Buffer keeps growing
-- Likely connectivity or publish-ack issue.
-- Run:
-
-  ```powershell
-  python retry_pending.py
-  ```
-
-- Check whether clients are connected and `flush_node` is succeeding.
-
----
-
-## 11) Security/Operational Notes
-
-- Do not commit `.env` with real tokens.
-- Rotate access tokens if leaked.
-- Current coordinates are marked as demonstration values.
-- Consider adding:
-  - requirements.txt / pyproject.toml
-  - structured logging
-  - metrics export
-  - graceful service packaging (systemd / container)
-  - retention/cleanup policy for SQLite
-
----
-
-## 12) License
-
-No license file is currently included in this repository. Add one if this project will be shared publicly.
-
----
-
-## 13) Quick Command Reference
+- Interactive flow for map color transition demo.
 
 ```powershell
-# Setup
+python test_buffer_capacity.py
+```
+- Verifies buffer-full policy with temporary test DB.
+
+### Performance benchmarks
+
+```powershell
+python latency_test.py
+```
+Outputs:
+- `latency_results.csv`
+- `latency_summary.csv`
+
+```powershell
+python alarm_latency_test.py
+```
+Outputs:
+- `alarm_latency_results.csv`
+
+### Delivery verification
+
+```powershell
+python delivery_verification.py
+```
+Outputs:
+- `delivery_results.csv`
+- `delivery_summary.csv`
+
+### Alarm-to-map severity synchronization
+
+```powershell
+python map_alarm_severity.py
+```
+- Polls active alarms every 5 seconds.
+- Writes `active_alarm_severity` server attribute per node.
+- Intended to drive marker color logic on map dashboards.
+
+---
+
+## 9) Dashboard import guide (ThingsBoard)
+
+The folder `Dashboard_Thingsboard/` contains full dashboard exports.
+
+### Import steps
+1. Open ThingsBoard.
+2. Go to Dashboards.
+3. Choose Import Dashboard.
+4. Select one JSON file from `Dashboard_Thingsboard/`.
+5. Confirm entity IDs and device bindings match your environment.
+
+Included exports:
+- `Overall dashboard.json`
+- `post-flood_water_quality___bidur_station.json`
+- `post-flood_water_quality___bidur_station (1).json`
+- `post-flood_water_quality___timure_station.json`
+- `post-flood_water_quality___betrawati_station.json`
+- `post-flood_water_quality___bhotekoshi_station.json`
+
+---
+
+## 10) Results files
+
+Sample artifacts are stored under `results/`:
+- `latency_results.csv`
+- `latency_summary.csv`
+- `alarm_latency_results.csv`
+- `delivery_results.csv`
+- `delivery_summary.csv`
+
+These are example outputs and can be regenerated by rerunning scripts.
+
+---
+
+## 11) Common issues and fixes
+
+### Missing env values
+- Symptom: script raises missing host/token/API key errors.
+- Fix: verify `.env` keys and spelling.
+
+### MQTT timeout / no PUBACK
+- Check token validity and host.
+- Confirm outbound port `8883`.
+- Check TLS interception/firewall behavior.
+
+### API key auth failures
+- Symptom: REST scripts fail with unauthorized/forbidden.
+- Fix: verify `THINGSBOARD_API_KEY` and scope.
+
+### Backlog never drains
+- Confirm `outage.flag` is removed.
+- Check `multi_node.py` logs for `[RETRY LATER]` publish errors.
+- Run `python retry_pending.py`.
+
+### Dashboard shows stale severity color
+- Keep `map_alarm_severity.py` running.
+- Confirm `active_alarm_severity` attribute updates on the device.
+
+---
+
+## 12) Security notes
+
+- Never commit `.env` with real tokens/API keys.
+- Rotate tokens/API keys if leaked.
+- Treat simulated metrics as synthetic test data, not compliance evidence.
+
+---
+
+## 13) Quick start (minimum)
+
+```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-pip install paho-mqtt python-dotenv
-
-# Main runtime
+pip install -r requirements.txt
+# configure .env first
 python multi_node.py
-
-# Replay pending
-python retry_pending.py
-
-# Device connectivity check
-python connectall.py
-
-# Alarm scenario injection
-python alarm_scenarios.py turbidity_critical
-
-# QoS test
-python test_qos.py
-
-# Flow alarm sustained test
-python test_flow_alarm.py --duration 30 --interval 5
 ```
+
+---
+
+## 14) Repository status
+
+This README reflects the current code and files present in this repository as of the latest update, including the new benchmark, verification, dashboard, and mapping scripts.
